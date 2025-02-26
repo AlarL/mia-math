@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("Chat Assistant tˆˆtab!");
+    res.send("Chat Assistant t√∂√∂tab!");
 });
 
-app.listen(PORT, () => console.log(`Server tˆˆtab pordil ${PORT}`));
+app.listen(PORT, () => console.log(`Server t√∂√∂tab pordil ${PORT}`));
