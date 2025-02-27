@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vestlusassistent</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        #chat-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .user {
+            background: #d1e7fd;
+            text-align: right;
+        }
+
+        .bot {
+            background: #e1f5c4;
+        }
+
+        #input-box {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Vestlusassistent</h2>
+    <div id="chat-box"></div>
+
+    <input type="text" id="input-box" placeholder="Sisesta sõnum..." />
+    <button onclick="sendMessage()">Saada</button>
+    <button onclick="clearChat()">Tühjenda vestlus</button>
+
+    <script>
+        const chatBox = document.getElementById("chat-box");
+        const inputBox = document.getElementById("input-box");
+        const API_URL = "https://mia-math-production.up.railway.app/";  // Asenda oma Railway URL-iga
+
+        function sendMessage() {
+            const message = inputBox.value.trim();
+            if (!message) return;
+
+            // Lisa kasutaja sõnum
+            appendMessage("user", message);
+            inputBox.value = "";
+
+            // Saada sõnum serverisse
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage("bot", data.response || "Viga vastuses!");
+            })
+            .catch(error => {
+                appendMessage("bot", "Viga serveriga!");
+                console.error(error);
+            });
+        }
+
+        function appendMessage(sender, text) {
+            const div = document.createElement("div");
+            div.classList.add("message", sender);
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function clearChat() {
+            chatBox.innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
